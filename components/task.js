@@ -1,17 +1,16 @@
 import React from "react";
-import { Text, View, Image, StyleSheet } from "react-native";
+import { Text, Image, View, StyleSheet, TextInput } from "react-native";
 
-const Task = (props) => {
+const TaskCard = (prop) => {
     return (
-        <View style={styles.item}>
-            <Text style={styles.itemtext}>{props.text}</Text>
+        <View style={styles.todoTask}>
+            <Text style={{ fontSize: 18, letterSpacing: 0.5 }}>{prop.text}</Text>
         </View>
     )
 }
 
-export default Task;
+export default TaskCard;
 
 const styles = StyleSheet.create({
-    item: { padding: 9, width: '90%' },
-    itemtext: { fontSize: 18 }
+    todoTask: { width: "90%" }
 })

@@ -1,85 +1,84 @@
+import { StatusBar } from 'expo-status-bar';
+import { ScrollView, StyleSheet, Text, Image, TouchableOpacity, View, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
 
+import TaskCard from './components/task';
 import { useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
-import Task from './components/task';
 
 export default function App() {
   const [task, setTask] = useState();
-  const [taskItems, setTaskItems] = useState([])
+  const [taskItem, setTaskItem] = useState([]);
 
   const addTask = () => {
     Keyboard.dismiss();
     if (task) {
-      setTaskItems([...taskItems, task]);
-      setTask(null);
+      setTaskItem([...taskItem, task])
+      setTask(null)
     }
-  };
-
-  const deleteAll = () => {
-    let itemsCopy = [];
-    setTaskItems(itemsCopy)
   }
 
-  const completeTask = (index) => {
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy);
+  const deleteAll = () => {
+    let copyItems = [];
+    setTaskItem(copyItems)
+  }
+
+  const deleteItem = (index) => {
+    let copyItems = [...taskItem]
+    copyItems.splice(index, 1)
+    setTaskItem(copyItems)
   }
   return (
     <View style={styles.container}>
+      <Text style={styles.headTxt}>Todo</Text>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {/* headin of todo */}
-        <View style={{ backgroundColor: "black", padding: 14, alignItems: 'left', marginTop: 20, width: "100%" }}>
-          <Text style={styles.headtxt}>Todo App</Text>
-        </View>
-        {/* remove all */}
         <TouchableOpacity style={styles.removeall} onPress={() => deleteAll()}>
-          <Text style={{ fontSize: 18, color: "white", letterSpacing: 0.25, fontWeight: '700' }}>Remove all</Text>
+          <Text style={{ fontSize: 16, fontWeight: "700", letterSpacing: 0.25, color: '#fff' }}>Remove all</Text>
         </TouchableOpacity>
-        {/* lists of todos and remove btn*/}
-        <View>
-          <View style={styles.todolist}>
-            {taskItems.map((item, index) => {
-              return (
-                <TouchableOpacity key={index} style={styles.todocard}>
-                  <Task text={item} />
-
-                  <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                    <Image style={styles.deleteicon} source={require('./assets/images/delete.png')} />
-                  </TouchableOpacity>
+        {/* -----  mapping for list items ----- */}
+        <View style={styles.itemContainer}>
+          {taskItem.map((item, index) => {
+            return (
+              <TouchableOpacity key={index} style={styles.todoCard}>
+                <TaskCard text={item} />
+                <TouchableOpacity key={index} onPress={() => {
+                  deleteItem(index)
+                }}>
+                  <Image source={require('./image/delete.png')} style={{ height: 25, width: 25 }} />
                 </TouchableOpacity>
-              )
-            })}
-          </View>
+              </TouchableOpacity>
+            )
+          })}
         </View>
-        {/* input field for todo */}
       </ScrollView>
-      <KeyboardAvoidingView style={styles.inputxtwrapper}>
-        <TextInput placeholder='Enter your task' style={styles.inputField} value={task} onChangeText={(text) => { setTask(text) }} />
+      <KeyboardAvoidingView style={styles.txtInputWrapper}>
+        <TextInput placeholder='Enter your task' style={styles.txtInput} value={task} onChangeText={(text) => { setTask(text) }} />
         <TouchableOpacity onPress={() => { addTask() }}>
-          <Image source={require('./assets/images/plus.png')} style={styles.plusiconstyle} />
+          <Image source={require('./image/plus.png')} />
         </TouchableOpacity>
       </KeyboardAvoidingView>
+
+      <StatusBar style="auto" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, justifyContent: "center", backgroundColor: '#e8e7e6'
+    flex: 1,
+    backgroundColor: '#d9d4d5',
+    justifyContent: 'center',
+    flexDirection: 'column'
   },
-  headtxt: { fontSize: 20, fontWeight: "700", color: "orange" },
-  removeall: { backgroundColor: "red", borderRadius: 5, padding: 8, flex: 0, alignSelf: 'flex-end', margin: 5, width: 120, alignItems: 'center' },
-  removealltxt: {},
-  plusiconstyle: {
-    backgroundColor: 'white', height: 50, borderTopRightRadius: 10, resizeMode: 'contain', width: 30, marginBottom: 4, borderBottomRightRadius: 10
-  },
-  inputField: {
-    padding: 7, fontSize: 16, backgroundColor: "white", borderTopLeftRadius: 10, borderBottomLeftRadius: 10, flex: 1, height: 50, fontWeight: '600', marginBottom: 4
-  },
-  inputxtwrapper: { flex: 0, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', padding: 4, alignSelf: 'flex-end' },
 
-  todocard: { backgroundColor: 'white', margin: 10, borderRadius: 12, flex: 0, flexDirection: 'row', alignItems: 'center', padding: 7, justifyContent: 'space-between' },
+  headTxt: { fontSize: 22, padding: 10, backgroundColor: 'orange', marginTop: 34, fontWeight: '700', letterSpacing: 0.5, color: '#30302f', borderTopLeftRadius: 20, borderTopRightRadius: 20 },
 
-  deleteicon: { width: 25, height: 25 }
+  removeall: { backgroundColor: '#fa3c45', padding: 7, width: 100, borderRadius: 20, margin: 4, alignItems: 'center', alignSelf: 'flex-end', elevation: 4 },
+
+  taskCard: { backgroundColor: '#fff', padding: 12, margin: 5, borderRadius: 18 },
+  dltBtn: { width: 25, height: 25 },
+
+  itemContainer: { flex: 0 },
+  todoCard: { flex: 0, flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: '#fff', margin: 8, borderRadius: 18, alignItems: 'center' },
+
+  txtInputWrapper: { backgroundColor: '#fff', padding: 9, flex: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopStartRadius: 20, borderTopEndRadius: 20 },
+  txtInput: { fontSize: 18, fontWeight: '500', width: '90%', padding: 4 }
 });
