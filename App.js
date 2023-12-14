@@ -100,6 +100,6 @@ const styles = StyleSheet.create({
   itemContainer: { flex: 0 },
   todoCard: { flex: 0, flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: '#fff', margin: 8, borderRadius: 18, alignItems: 'center' },
 
-  txtInputWrapper: { backgroundColor: '#fff', padding: 9, flex: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopStartRadius: 20, borderTopEndRadius: 20 },
+  txtInputWrapper: { backgroundColor: '#fab669', padding: 9, flex: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopStartRadius: 20, borderTopEndRadius: 20 },
   txtInput: { fontSize: 18, fontWeight: '500', width: '90%', padding: 4 }
 });
