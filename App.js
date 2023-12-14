@@ -2,16 +2,27 @@ import { StatusBar } from 'expo-status-bar';
 import { ScrollView, StyleSheet, Text, Image, TouchableOpacity, View, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
 
 import TaskCard from './components/task';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function App() {
   const [task, setTask] = useState();
   const [taskItem, setTaskItem] = useState([]);
+  const [editIndex, setEditIndex] = useState(null)
+
+  const textRef = useRef(null)
 
   const addTask = () => {
     Keyboard.dismiss();
     if (task) {
-      setTaskItem([...taskItem, task])
+      if (editIndex !== null) {
+        let copyItems = [...taskItem]
+        copyItems[editIndex] = task
+        setTaskItem(copyItems)
+        setEditIndex(null)
+      }
+      else {
+        setTaskItem([...taskItem, task])
+      }
       setTask(null)
     }
   }
@@ -26,6 +37,16 @@ export default function App() {
     copyItems.splice(index, 1)
     setTaskItem(copyItems)
   }
+
+  const editTask = (index) => {
+    setTask(taskItem[index])
+    setEditIndex(index)
+
+    if (textRef.current) {
+      textRef.current.focus()
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.headTxt}>Todo</Text>
@@ -37,7 +58,7 @@ export default function App() {
         <View style={styles.itemContainer}>
           {taskItem.map((item, index) => {
             return (
-              <TouchableOpacity key={index} style={styles.todoCard}>
+              <TouchableOpacity key={index} style={styles.todoCard} onPress={() => editTask(index)}>
                 <TaskCard text={item} />
                 <TouchableOpacity key={index} onPress={() => {
                   deleteItem(index)
@@ -50,8 +71,8 @@ export default function App() {
         </View>
       </ScrollView>
       <KeyboardAvoidingView style={styles.txtInputWrapper}>
-        <TextInput placeholder='Enter your task' style={styles.txtInput} value={task} onChangeText={(text) => { setTask(text) }} />
-        <TouchableOpacity onPress={() => { addTask() }}>
+        <TextInput ref={textRef} placeholder='Enter your task' style={styles.txtInput} value={task} onChangeText={(text) => { setTask(text) }} />
+        <TouchableOpacity onPress={() => addTask()}>
           <Image source={require('./image/plus.png')} />
         </TouchableOpacity>
       </KeyboardAvoidingView>
